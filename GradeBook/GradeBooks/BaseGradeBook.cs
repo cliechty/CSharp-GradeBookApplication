@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
-
-using GradeBook.Enums;
-using System.Collections.Generic;
-using System.IO;
+﻿using GradeBook.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace GradeBook.GradeBooks
 {
@@ -13,6 +12,7 @@ namespace GradeBook.GradeBooks
     {
         public string Name { get; set; }
         public List<Student> Students { get; set; }
+        public GradeBookType Type { get; set; }
 
         public BaseGradeBook(string name)
         {
@@ -110,12 +110,16 @@ namespace GradeBook.GradeBooks
             {
                 case 'A':
                     return 4;
+
                 case 'B':
                     return 3;
+
                 case 'C':
                     return 2;
+
                 case 'D':
                     return 1;
+
                 case 'F':
                     return 0;
             }
@@ -146,12 +150,15 @@ namespace GradeBook.GradeBooks
                     case EnrollmentType.Campus:
                         campusPoints += student.AverageGrade;
                         break;
+
                     case EnrollmentType.State:
                         statePoints += student.AverageGrade;
                         break;
+
                     case EnrollmentType.National:
                         nationalPoints += student.AverageGrade;
                         break;
+
                     case EnrollmentType.International:
                         internationalPoints += student.AverageGrade;
                         break;
@@ -162,9 +169,11 @@ namespace GradeBook.GradeBooks
                     case StudentType.Standard:
                         standardPoints += student.AverageGrade;
                         break;
+
                     case StudentType.Honors:
                         honorPoints += student.AverageGrade;
                         break;
+
                     case StudentType.DualEnrolled:
                         dualEnrolledPoints += student.AverageGrade;
                         break;
@@ -256,14 +265,13 @@ namespace GradeBook.GradeBooks
                              where type.FullName == "GradeBook.GradeBooks." + gradeBookType + "GradeBook"
                              select type).FirstOrDefault();
 
-
             // Protection code
             if (gradebook == null)
                 gradebook = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                              from type in assembly.GetTypes()
                              where type.FullName == "GradeBook.GradeBooks.StandardGradeBook"
                              select type).FirstOrDefault();
-            
+
             return JsonConvert.DeserializeObject(json, gradebook);
         }
     }
